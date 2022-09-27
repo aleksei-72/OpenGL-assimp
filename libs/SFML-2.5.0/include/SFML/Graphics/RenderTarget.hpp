@@ -458,7 +458,7 @@ private:
     {
         enum {VertexCacheSize = 4};
 
-        bool      enable;         ///< Is the cache enabled?
+        bool      enabled;         ///< Is the cache enabled?
         bool      glStatesSet;    ///< Are our internal GL states set yet?
         bool      viewChanged;    ///< Has the current view changed since last draw?
         BlendMode lastBlendMode;  ///< Cached blending mode

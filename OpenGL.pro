@@ -8,7 +8,7 @@ DEFINES += enable-sjlj-exceptions fexceptions DSFML_DYNAMIC
 
 
 INCLUDEPATH += \
-    libs/assimp-5.2.0/include \
+    libs/assimp-5.2.5/include \
     libs/glew-2.1.0/include \
     libs/glfw-3.3.8.bin.WIN64/include \
     libs/glm \
@@ -66,29 +66,3 @@ win32: LIBS += -L$$PWD/libs/assimp-5.2.5/lib/ -llibassimp.dll
 win32: LIBS += -L$$PWD/libs/inicpp-1.2.0/bin/ -llibinicpp
 win32: LIBS += -L$$PWD/libs/tinyxml/lib/ -lTinyXML
 win32: LIBS += -L$$PWD/libs/SFML-2.5.0/lib/ -lsfml-system -lsfml-graphics -lsfml-window
-
-DISTFILES += \
-    gamedata/config/conf.ini \
-    gamedata/config/graphics.ini \
-    gamedata/config/graphics.ini.bak \
-    gamedata/config/player.ini \
-    gamedata/mesh/backpack/ao.jpg \
-    gamedata/mesh/backpack/backpack.mtl \
-    gamedata/mesh/backpack/diffuse.jpg \
-    gamedata/mesh/backpack/normal.png \
-    gamedata/mesh/backpack/roughness.jpg \
-    gamedata/mesh/backpack/source_attribution.txt \
-    gamedata/mesh/backpack/specular.jpg \
-    gamedata/mesh/block.mtl \
-    gamedata/shader/fragment.glsl \
-    gamedata/shader/vertex.glsl \
-    gamedata/texture/backpack/ao.jpg \
-    gamedata/texture/backpack/diffuse.jpg \
-    gamedata/texture/backpack/normal.png \
-    gamedata/texture/backpack/roughness.jpg \
-    gamedata/texture/backpack/source_attribution.txt \
-    gamedata/texture/backpack/specular.jpg \
-    gamedata/texture/brickstone.png \
-    gamedata/texture/default.png \
-    gamedata/texture/ground.png \
-    gamedata/texture/sky.jpg
