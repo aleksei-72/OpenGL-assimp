@@ -34,12 +34,12 @@ SOURCES += \
     src/physics/player/playerPhysics.cpp \
     src/player/Player.cpp \
     src/public/public.cpp \
+    src/storage/storage.cpp \
     src/timer/timer.cpp
 
 
 HEADERS += \
     src/3d/mesh/Mesh.h \
-    src/3d/mesh/Model.h \
     src/3d/mesh/simpleMeshes.h \
     src/3d/model/Model.h \
     src/3d/object/GameObject.h \
@@ -56,6 +56,7 @@ HEADERS += \
     src/physics/player/playerPhysics.h \
     src/player/Player.h \
     src/public/public.h \
+    src/storage/storage.h \
     src/timer/timer.h
 
 

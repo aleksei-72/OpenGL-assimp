@@ -12,8 +12,8 @@ public:
 
     Logger();
     ~Logger();
-    void error(string msg, string description = "");
-    void info(string msg, string description = "");
+    void error(string msg, string description = "", string file = "", int line = -1);
+    void info(string msg, string description = "", string file = "", int line = -1);
 
 private:
     ofstream stream;

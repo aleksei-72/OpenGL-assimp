@@ -1,7 +1,7 @@
 #ifndef GAME_OBJECT_H
 #define GAME_OBJECT_H
 
-#include <src/3d/mesh/mesh.h>
+#include <src/3d/model/Model.h>
 #include <src/gl/texture.h>
 
 #include <glm/vec2.hpp>
@@ -18,13 +18,12 @@ class GameObject
 {
 public:
 
-    GameObject(std::string filename);
+    GameObject();
 
-    std::vector <Mesh> meshes;
-    Texture texture;
+    Model *model;
 
     vec3 position = {0, 0, 0},
-        turning = {0, 0, 0};
+         turning = {0, 0, 0};
 
     void rotate(vec3 delta);
 
@@ -32,11 +31,7 @@ public:
 
 private:
 
-    void processNode(aiNode *node, const aiScene *scene);
     void normalizeDurning();
-
-    Mesh processMesh(aiMesh *mesh, const aiScene *scene);
-
     float normalizeOneAngle(float angle);
 };
 

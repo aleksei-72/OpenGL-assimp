@@ -16,7 +16,7 @@ int pixelBufferToTGA(PixelBuffer buffer, string fname)
 
     if(!sFile)
     {
-        logger.error("can not open file", "file :" + fname);
+        logger_error("can not open file", "file :" + fname);
         return 1;
     }
 

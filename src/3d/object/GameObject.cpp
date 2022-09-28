@@ -9,69 +9,11 @@
 #include <src/constants.h>
 #include <iostream>
 
-GameObject::GameObject(std::string filename)
+GameObject::GameObject()
 {
 
-    Assimp::Importer importer;
-    const aiScene *scene = importer.ReadFile(pathSettings.basePath + pathSettings.meshPath + filename, aiProcess_Triangulate | aiProcess_FlipUVs);
-
-    if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-    {
-        logger.error("Assimp::Error", importer.GetErrorString());
-    }
-
-    processNode(scene->mRootNode, scene);
 }
 
-void GameObject::processNode(aiNode *node, const aiScene *scene)
-{
-
-    for(unsigned int i = 0; i < node->mNumMeshes; i++)
-    {
-        aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-        this->meshes.push_back(processMesh(mesh, scene));
-    }
-
-    for(unsigned int i = 0; i < node->mNumChildren; i++)
-    {
-        processNode(node->mChildren[i], scene);
-    }
-}
-
-Mesh GameObject::processMesh(aiMesh *mesh, const aiScene *scene)
-{
-    vector<Vertex> vertices;
-
-    for (unsigned int i = 0; i < mesh->mNumVertices; i++)
-    {
-        Vertex vertex;
-
-        glm::vec3 position;
-        position.x = mesh->mVertices[i].x;
-        position.y = mesh->mVertices[i].y;
-        position.z = mesh->mVertices[i].z;
-        vertex.position = position;
-
-        glm::vec2 texCoords = {0, 0};
-
-        if (mesh->mTextureCoords[0])
-        {
-            texCoords.x = mesh->mTextureCoords[0][i].x;
-            texCoords.y = mesh->mTextureCoords[0][i].y;
-        }
-        vertex.texCoords = texCoords;
-
-        glm::vec3 normal;
-        normal.x = mesh->mNormals[i].x;
-        normal.y = mesh->mNormals[i].y;
-        normal.z = mesh->mNormals[i].z;
-        vertex.normal = normal;
-
-        vertices.push_back(vertex);
-    }
-
-    return Mesh(vertices);
-}
 
 glm::mat4 GameObject::getModelMatrix()
 {

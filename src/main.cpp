@@ -3,9 +3,11 @@
 
 #include <iostream>
 #include <src/gl/texture.h>
+#include <src/storage/storage.h>
 #include <src/public/public.h>
 #include <src/gl/shader.h>
 #include <src/3d/mesh/simpleMeshes.h>
+#include <src/3d/object/GameObject.h>
 #include <src/gl/pixelBufferToTGA.h>
 #include <src/timer/timer.h>
 
@@ -27,12 +29,10 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-
     Timer t;
-
     if (glfwInit() == GL_FALSE)
     {
-        logger.error("fail for init GLFW");
+        logger_error("fail for init GLFW", "");
         return 1;
     }
 
@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
     catch (runtime_error &e)
     {
         cout << e.what();
-        logger.error(e.what());
+        logger_error(e.what(), "");
         return 0;
     }
 
@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
 
         if (!window)
         {
-            logger.error("fail for create window", "fullscreen: " + string(graphicSettings.isFullScreen ? "t" : "f") +
+            logger_error("fail for create window", "fullscreen: " + string(graphicSettings.isFullScreen ? "t" : "f") +
                          " w: " + to_string(w) +
                          " h: " + to_string(h));
         }
@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
     glewExperimental = GL_TRUE;
     if (glewInit())
     {
-        logger.error("fail for init GLEW");
+        logger_error("fail for init GLEW", "");
         return 1;
     }
 
@@ -107,9 +107,11 @@ int main(int argc, char* argv[])
 
     if (!GLEW_VERSION_3_3)
     {
-        logger.error("OpenGL 3.3 is required");
+        logger_error("OpenGL 3.3 is required", "");
         return 1;
     }
+
+    logger_info("init OpenGL " + to_string(t.getElapsedTime()) + " ms", "");
 
     glEnable(GL_DEPTH_TEST);
 
@@ -125,15 +127,21 @@ int main(int argc, char* argv[])
     Shader shader;
     shader.LoadFromFile("vertex.glsl", nullptr, "fragment.glsl");
 
-    logger.info("init OpenGL", to_string(t.getElapsedTime()) + " ms");
 
-
-    vector<Model> objects;
+    vector<GameObject> objects;
     {
-        Model obj("backpack/backpack.obj");
-        obj.texture = loadTexture("backpack/diffuse.jpg");
+        GameObject obj = GameObject();
+        obj.model = getModel("backpack/backpack.obj", "backpack/diffuse.jpg");
         obj.position = {-0.5, -0.5, -0.5};
+        obj.rotate({0, 45, 0});
         objects.push_back(obj);
+
+        GameObject obj2 = GameObject();
+        obj2.model = getModel("backpack/backpack.obj", "backpack/diffuse.jpg");
+        obj2.position = {2.5, -0.5, 2.5};
+        obj2.rotate({0, 45, 0});
+        objects.push_back(obj2);
+
     }
 
     FpsCounter fpsCounter;
@@ -146,7 +154,7 @@ int main(int argc, char* argv[])
 
         updatePlayer(window, frameTime);
 
-        //objects[0].rotate({0.002 * frameTime, 0.002 * frameTime, 0.002 * frameTime});
+        objects[0].rotate({0.002 * frameTime, 0.002 * frameTime, 0.002 * frameTime});
 
         glm::ivec2 resolution = {0, 0};
         glfwGetWindowSize(window, &resolution.x, &resolution.y);
@@ -177,16 +185,17 @@ int main(int argc, char* argv[])
         {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, 0);
-            glBindTexture(GL_TEXTURE_2D, objects[i].texture.texture);
+            glBindTexture(GL_TEXTURE_2D, objects[i].model->texture->texture);
 
             glm::mat4 model = objects[i].getModelMatrix();
 
             glm::mat4 MVP = projection * view * model;
 
+            // @TODO: save uniform positions as variable
             glUniform1i(shader.getUniformPos("mainTexture"), 0);
             glUniformMatrix4fv(shader.getUniformPos("mvp"), 1, GL_FALSE, &MVP[0][0]);
 
-            for (Mesh mesh: objects[i].meshes)
+            for (Mesh mesh: objects[i].model->meshes)
             {
                 glBindVertexArray(mesh.vao);
                 glDrawArrays(GL_TRIANGLES, 0, mesh.triangleCount);

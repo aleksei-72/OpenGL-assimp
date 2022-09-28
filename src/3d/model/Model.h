@@ -1,7 +1,7 @@
-#ifndef GAME_OBJECT_H
-#define GAME_OBJECT_H
+#ifndef MODEL_H
+#define MODEL_H
 
-#include <src/3d/mesh/mesh.h>
+#include <src/3d/mesh/Mesh.h>
 #include <src/gl/texture.h>
 
 #include <glm/vec2.hpp>
@@ -18,26 +18,17 @@ class Model
 {
 public:
 
-    Model(std::string filename);
+    Model();
+    Model(std::string fname);
+    int loadFromFile(std::string fname);
 
     std::vector <Mesh> meshes;
-    Texture texture;
-
-    vec3 position = {0, 0, 0},
-        turning = {0, 0, 0};
-
-    void rotate(vec3 delta);
-
-    glm::mat4 getModelMatrix();
+    Texture *texture;
 
 private:
 
     void processNode(aiNode *node, const aiScene *scene);
-    void normalizeDurning();
-
     Mesh processMesh(aiMesh *mesh, const aiScene *scene);
-
-    float normalizeOneAngle(float angle);
 };
 
-#endif // GAME_OBJECT_H
+#endif // MODEL_H

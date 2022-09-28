@@ -6,6 +6,9 @@
 #include <glm/vec3.hpp>
 #include <src/player/Player.h>
 
+#define logger_error(m, d) logger.error(m, d, __FILE__, __LINE__)
+#define logger_info(m, d) logger.info(m, d, __FILE__, __LINE__)
+
 using namespace glm;
 
 struct PathSettings

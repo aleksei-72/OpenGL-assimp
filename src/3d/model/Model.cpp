@@ -9,18 +9,32 @@
 #include <src/constants.h>
 #include <iostream>
 
-Model::Model(std::string filename)
+
+Model::Model()
 {
 
+}
+
+Model::Model(std::string fname)
+{
+
+    loadFromFile(fname);
+}
+
+int Model::loadFromFile(std::string fname)
+{
     Assimp::Importer importer;
-    const aiScene *scene = importer.ReadFile(pathSettings.basePath + pathSettings.meshPath + filename, aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene *scene = importer.ReadFile(pathSettings.basePath + pathSettings.meshPath + fname, aiProcess_Triangulate | aiProcess_FlipUVs);
 
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
-        logger.error("Assimp::Error", importer.GetErrorString());
+        logger_error("Assimp::Error", importer.GetErrorString());
     }
 
+    logger_info("Read model '" + fname + "' success", "");
     processNode(scene->mRootNode, scene);
+
+    return 0;
 }
 
 void Model::processNode(aiNode *node, const aiScene *scene)
@@ -79,39 +93,3 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
     return Mesh(vertices);
 }
 
-glm::mat4 Model::getModelMatrix()
-{
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(position.x, position.y, position.z));
-
-    model = glm::rotate(model, turning.x, glm::vec3(1, 0, 0));
-    model = glm::rotate(model, turning.y, glm::vec3(0, 1, 0));
-    model = glm::rotate(model, turning.z, glm::vec3(0, 0, 1));
-
-    return model;
-}
-
-void Model::rotate(vec3 delta)
-{
-    turning += delta;
-
-    normalizeDurning();
-}
-
-void Model::normalizeDurning()
-{
-    turning.x = normalizeOneAngle(turning.x);
-    turning.y = normalizeOneAngle(turning.y);
-    turning.z = normalizeOneAngle(turning.z);
-}
-
-float Model::normalizeOneAngle(float angle)
-{
-    int sign = angle / abs(angle);
-
-    while (abs(angle) > 2 * PI)
-    {
-        angle -= sign * 2 * PI;
-    }
-
-    return angle;
-}

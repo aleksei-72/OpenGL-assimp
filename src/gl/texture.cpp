@@ -12,7 +12,7 @@ GLuint sfmlLoadTexture(string filename, int *width, int *height)
     sf::Image image;
     if (!image.loadFromFile(filename))
     {
-        logger.error("fail for load texture: " + filename);
+        logger_error("fail for load texture: " + filename, "");
         throw TEXTURE_LOAD_ERROR;
     }
 
@@ -24,7 +24,7 @@ GLuint sfmlLoadTexture(string filename, int *width, int *height)
 
     const unsigned char *tex = image.getPixelsPtr();
 
-    logger.info("Read texture '" + filename + '\'', "size: " + to_string(*width) + "x" + to_string(*height));
+    logger_info("Read texture '" + filename + " size: " + to_string(*width) + "x" + to_string(*height), "");
 
     GLuint texture;
 
@@ -63,5 +63,5 @@ Texture loadTexture(string filename)
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    return {texture, width, height};
+    return {filename, texture, width, height};
 }
