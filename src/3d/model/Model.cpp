@@ -9,20 +9,22 @@
 #include <src/constants.h>
 #include <iostream>
 
+using namespace std;
 
 Model::Model()
 {
 
 }
 
-Model::Model(std::string fname)
+Model::Model(string fname)
 {
 
     loadFromFile(fname);
 }
 
-int Model::loadFromFile(std::string fname)
+int Model::loadFromFile(string fname)
 {
+    originalFname = fname;
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(pathSettings.basePath + pathSettings.meshPath + fname, aiProcess_Triangulate | aiProcess_FlipUVs);
 
@@ -93,3 +95,8 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
     return Mesh(vertices);
 }
 
+
+string Model::getDebugInfo()
+{
+    return "originalFname: " + originalFname;
+}

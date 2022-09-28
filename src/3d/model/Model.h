@@ -25,8 +25,10 @@ public:
     std::vector <Mesh> meshes;
     Texture *texture;
 
+    std::string getDebugInfo();
 private:
 
+    std::string originalFname;
     void processNode(aiNode *node, const aiScene *scene);
     Mesh processMesh(aiMesh *mesh, const aiScene *scene);
 };

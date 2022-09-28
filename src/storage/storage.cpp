@@ -5,6 +5,8 @@ using namespace std;
 std::map<std::string, Texture> textureStorage;
 std::map<std::string, Model> modelStorage;
 
+std::map<std::string, Object> objectStorage;
+
 Texture *getTexture(string fname)
 {
     if (textureStorage.find(fname) == textureStorage.end())
@@ -14,13 +16,22 @@ Texture *getTexture(string fname)
 }
 
 
-Model *getModel(string fname, string texture)
+Model *getModel(string name)
 {
-    if (modelStorage.find(fname) == modelStorage.end())
+    if (modelStorage.find(name) == modelStorage.end())
     {
-        modelStorage[fname] = Model(fname);
-        modelStorage[fname].texture = getTexture(texture);
+        return nullptr;
     }
 
-    return &(modelStorage[fname]);
+    return &(modelStorage[name]);
+}
+
+Object *get3dObject(string name)
+{
+    if (objectStorage.find(name) == objectStorage.end())
+    {
+        return nullptr;
+    }
+
+    return &(objectStorage[name]);
 }

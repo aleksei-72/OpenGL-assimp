@@ -1,7 +1,7 @@
 #ifndef GAME_OBJECT_H
 #define GAME_OBJECT_H
 
-#include <src/3d/model/Model.h>
+#include <src/3d/object/Object.h>
 #include <src/gl/texture.h>
 
 #include <glm/vec2.hpp>
@@ -18,9 +18,12 @@ class GameObject
 {
 public:
 
+    static unsigned int nextObjectId;
+    unsigned int id;
+
     GameObject();
 
-    Model *model;
+    Object *object = nullptr;
 
     vec3 position = {0, 0, 0},
          turning = {0, 0, 0};
@@ -29,6 +32,7 @@ public:
 
     glm::mat4 getModelMatrix();
 
+    std::string getDebugInfo();
 private:
 
     void normalizeDurning();

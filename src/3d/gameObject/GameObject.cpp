@@ -1,4 +1,4 @@
-#include <src/3d/object/GameObject.h>
+#include <src/3d/gameObject/GameObject.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <cmath>
@@ -9,9 +9,14 @@
 #include <src/constants.h>
 #include <iostream>
 
+using namespace std;
+
+unsigned int GameObject::nextObjectId = 0;
+
 GameObject::GameObject()
 {
-
+    id = nextObjectId;
+    nextObjectId ++;
 }
 
 
@@ -50,4 +55,14 @@ float GameObject::normalizeOneAngle(float angle)
     }
 
     return angle;
+}
+
+string GameObject::getDebugInfo()
+{
+    string result = "id: " + to_string(id);
+
+    if (object != nullptr && object->model != nullptr)
+        result += "\nobject->model: '" + object->model->getDebugInfo() + "'";
+
+    return result;
 }

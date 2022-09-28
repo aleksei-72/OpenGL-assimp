@@ -18,10 +18,12 @@ INCLUDEPATH += \
 
 
 SOURCES += \
+    src/3d/gameObject/GameObject.cpp \
+    src/3d/hitbox/HitBox.cpp \
     src/3d/mesh/Mesh.cpp \
     src/3d/mesh/simpleMeshes.cpp \
     src/3d/model/Model.cpp \
-    src/3d/object/GameObject.cpp \
+    src/3d/object/Object.cpp \
     src/gl/pixelBuffer.cpp \
     src/gl/pixelBufferToTGA.cpp \
     src/gl/shader.cpp \
@@ -39,10 +41,12 @@ SOURCES += \
 
 
 HEADERS += \
+    src/3d/gameObject/GameObject.h \
+    src/3d/hitbox/HitBox.h \
     src/3d/mesh/Mesh.h \
     src/3d/mesh/simpleMeshes.h \
     src/3d/model/Model.h \
-    src/3d/object/GameObject.h \
+    src/3d/object/Object.h \
     src/constants.h \
     src/fpsCounter/fpsCounter.h \
     src/gl/pixelBuffer.h \
@@ -67,3 +71,6 @@ win32: LIBS += -L$$PWD/libs/assimp-5.2.5/lib/ -llibassimp.dll
 win32: LIBS += -L$$PWD/libs/inicpp-1.2.0/bin/ -llibinicpp
 win32: LIBS += -L$$PWD/libs/tinyxml/lib/ -lTinyXML
 win32: LIBS += -L$$PWD/libs/SFML-2.5.0/lib/ -lsfml-system -lsfml-graphics -lsfml-window
+
+DISTFILES += \
+    gameobject.qmodel

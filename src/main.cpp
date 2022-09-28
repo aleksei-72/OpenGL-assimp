@@ -7,7 +7,7 @@
 #include <src/public/public.h>
 #include <src/gl/shader.h>
 #include <src/3d/mesh/simpleMeshes.h>
-#include <src/3d/object/GameObject.h>
+#include <src/3d/gameObject/GameObject.h>
 #include <src/gl/pixelBufferToTGA.h>
 #include <src/timer/timer.h>
 
@@ -129,15 +129,36 @@ int main(int argc, char* argv[])
 
 
     vector<GameObject> objects;
+
+    // @TODO parse this parameters from xml file
     {
+
+        // Load 3d models and textures
+        {
+            Model *model = new Model();
+            model->loadFromFile("backpack/backpack.obj");
+            model->texture = getTexture("backpack/diffuse.jpg");
+
+            modelStorage["backpack/backpack.obj"] = *model;
+            model = nullptr;
+
+            Object *object = new Object();
+            object->model = getModel("backpack/backpack.obj");
+            object->hitbox = nullptr;
+
+            objectStorage["backpack"] = *object;
+            object = nullptr;
+        }
+
+        // spawn objects
         GameObject obj = GameObject();
-        obj.model = getModel("backpack/backpack.obj", "backpack/diffuse.jpg");
+        obj.object = get3dObject("backpack");
         obj.position = {-0.5, -0.5, -0.5};
         obj.rotate({0, 45, 0});
         objects.push_back(obj);
 
         GameObject obj2 = GameObject();
-        obj2.model = getModel("backpack/backpack.obj", "backpack/diffuse.jpg");
+        obj2.object = get3dObject("backpack");
         obj2.position = {2.5, -0.5, 2.5};
         obj2.rotate({0, 45, 0});
         objects.push_back(obj2);
@@ -183,9 +204,21 @@ int main(int argc, char* argv[])
 
         for (unsigned int i = 0; i < objects.size(); i++)
         {
+            if (objects[i].object == nullptr)
+            {
+                logger_error("gameobject->object is null", objects[i].getDebugInfo());
+                continue;
+            }
+
+            if (objects[i].object->model->texture == nullptr)
+            {
+                logger_error("model->texturt is null", objects[i].object->model->getDebugInfo());
+                continue;
+            }
+
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, 0);
-            glBindTexture(GL_TEXTURE_2D, objects[i].model->texture->texture);
+            glBindTexture(GL_TEXTURE_2D, objects[i].object->model->texture->texture);
 
             glm::mat4 model = objects[i].getModelMatrix();
 
@@ -195,7 +228,7 @@ int main(int argc, char* argv[])
             glUniform1i(shader.getUniformPos("mainTexture"), 0);
             glUniformMatrix4fv(shader.getUniformPos("mvp"), 1, GL_FALSE, &MVP[0][0]);
 
-            for (Mesh mesh: objects[i].model->meshes)
+            for (Mesh mesh: objects[i].object->model->meshes)
             {
                 glBindVertexArray(mesh.vao);
                 glDrawArrays(GL_TRIANGLES, 0, mesh.triangleCount);
