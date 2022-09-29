@@ -2,6 +2,7 @@
 #define PUBLIC_H
 
 #include <src/logger/logger.h>
+#include <src/gameObjectManager/gameObjectManager.h>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <src/player/Player.h>
@@ -43,6 +44,7 @@ struct UsersSettings
     float cursorSensivity = 0.0075;
 };
 
+extern GameObjectManager manager;
 extern Logger logger;
 
 extern Player player;

@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <src/gl/texture.h>
-#include <src/storage/storage.h>
 #include <src/public/public.h>
 #include <src/gl/shader.h>
 #include <src/3d/mesh/simpleMeshes.h>
@@ -128,40 +127,27 @@ int main(int argc, char* argv[])
     shader.LoadFromFile("vertex.glsl", nullptr, "fragment.glsl");
 
 
-    vector<GameObject> objects;
 
     // @TODO parse this parameters from xml file
     {
 
         // Load 3d models and textures
         {
-            Model *model = new Model();
-            model->loadFromFile("backpack/backpack.obj");
-            model->texture = getTexture("backpack/diffuse.jpg");
+            Model model("backpack/backpack.obj");
+            model.texture = manager.getTexture("backpack/diffuse.jpg");
+            manager.addModel("backpack/backpack.obj", model);
 
-            modelStorage["backpack/backpack.obj"] = *model;
-            model = nullptr;
+            Object object;
+            object.model = manager.getModel("backpack/backpack.obj");
+            object.hitbox = nullptr;
+            object.physicsMode = none;
 
-            Object *object = new Object();
-            object->model = getModel("backpack/backpack.obj");
-            object->hitbox = nullptr;
-
-            objectStorage["backpack"] = *object;
-            object = nullptr;
+            manager.addObject("backpack", object);
         }
 
-        // spawn objects
-        GameObject obj = GameObject();
-        obj.object = get3dObject("backpack");
-        obj.position = {-0.5, -0.5, -0.5};
-        obj.rotate({0, 45, 0});
-        objects.push_back(obj);
+        manager.spawn("backpack", {-0.5, -0.5, -0.5}, {0, 45, 0});
+        manager.spawn("backpack", {2.5, -0.5, 2.5}, {0, 45, 0});
 
-        GameObject obj2 = GameObject();
-        obj2.object = get3dObject("backpack");
-        obj2.position = {2.5, -0.5, 2.5};
-        obj2.rotate({0, 45, 0});
-        objects.push_back(obj2);
 
     }
 
@@ -174,8 +160,6 @@ int main(int argc, char* argv[])
     {
 
         updatePlayer(window, frameTime);
-
-        objects[0].rotate({0.002 * frameTime, 0.002 * frameTime, 0.002 * frameTime});
 
         glm::ivec2 resolution = {0, 0};
         glfwGetWindowSize(window, &resolution.x, &resolution.y);
@@ -202,25 +186,31 @@ int main(int argc, char* argv[])
 
         glUseProgram(shader.programm);
 
-        for (unsigned int i = 0; i < objects.size(); i++)
+        for (std::vector<GameObject>::iterator object = manager.begin(); object != manager.end(); object++)
         {
-            if (objects[i].object == nullptr)
+
+            if (object == manager.begin())
             {
-                logger_error("gameobject->object is null", objects[i].getDebugInfo());
+                (*(object)).rotate({0.002 * frameTime, 0.002 * frameTime, 0.002 * frameTime});
+            }
+
+            if ((*(object)).object == nullptr)
+            {
+                logger_error("gameobject->object is null", (*(object)).getDebugInfo());
                 continue;
             }
 
-            if (objects[i].object->model->texture == nullptr)
+            if ((*(object)).object->model->texture == nullptr)
             {
-                logger_error("model->texturt is null", objects[i].object->model->getDebugInfo());
+                logger_error("model->texturt is null", (*(object)).object->model->getDebugInfo());
                 continue;
             }
 
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, 0);
-            glBindTexture(GL_TEXTURE_2D, objects[i].object->model->texture->texture);
+            glBindTexture(GL_TEXTURE_2D, (*(object)).object->model->texture->texture);
 
-            glm::mat4 model = objects[i].getModelMatrix();
+            glm::mat4 model = (*(object)).getModelMatrix();
 
             glm::mat4 MVP = projection * view * model;
 
@@ -228,7 +218,7 @@ int main(int argc, char* argv[])
             glUniform1i(shader.getUniformPos("mainTexture"), 0);
             glUniformMatrix4fv(shader.getUniformPos("mvp"), 1, GL_FALSE, &MVP[0][0]);
 
-            for (Mesh mesh: objects[i].object->model->meshes)
+            for (Mesh mesh: (*(object)).object->model->meshes)
             {
                 glBindVertexArray(mesh.vao);
                 glDrawArrays(GL_TRIANGLES, 0, mesh.triangleCount);

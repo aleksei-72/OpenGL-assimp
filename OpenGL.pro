@@ -24,6 +24,7 @@ SOURCES += \
     src/3d/mesh/simpleMeshes.cpp \
     src/3d/model/Model.cpp \
     src/3d/object/Object.cpp \
+    src/gameObjectManager/gameObjectManager.cpp \
     src/gl/pixelBuffer.cpp \
     src/gl/pixelBufferToTGA.cpp \
     src/gl/shader.cpp \
@@ -36,7 +37,6 @@ SOURCES += \
     src/physics/player/playerPhysics.cpp \
     src/player/Player.cpp \
     src/public/public.cpp \
-    src/storage/storage.cpp \
     src/timer/timer.cpp
 
 
@@ -49,6 +49,7 @@ HEADERS += \
     src/3d/object/Object.h \
     src/constants.h \
     src/fpsCounter/fpsCounter.h \
+    src/gameObjectManager/gameObjectManager.h \
     src/gl/pixelBuffer.h \
     src/gl/pixelBufferToTGA.h \
     src/gl/shader.h \
@@ -60,7 +61,6 @@ HEADERS += \
     src/physics/player/playerPhysics.h \
     src/player/Player.h \
     src/public/public.h \
-    src/storage/storage.h \
     src/timer/timer.h
 
 

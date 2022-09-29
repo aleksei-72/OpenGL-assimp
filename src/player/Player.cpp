@@ -1,4 +1,4 @@
-#include <src/player/player.h>
+#include <src/player/Player.h>
 #include <src/public/public.h>
 #include <src/constants.h>
 #include <cmath>
@@ -21,8 +21,8 @@ void Player::normalizeDurning()
 {
     turning.x = normalizeOneAngle(turning.x);
 
-    turning.y = min(1.35f, turning.y);
-    turning.y = max(-1.35f, turning.y);
+    turning.y = std::min(1.35f, turning.y);
+    turning.y = std::max(-1.35f, turning.y);
 }
 
 float Player::normalizeOneAngle(float angle)

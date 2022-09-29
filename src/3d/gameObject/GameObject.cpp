@@ -11,12 +11,10 @@
 
 using namespace std;
 
-unsigned int GameObject::nextObjectId = 0;
 
 GameObject::GameObject()
 {
-    id = nextObjectId;
-    nextObjectId ++;
+
 }
 
 

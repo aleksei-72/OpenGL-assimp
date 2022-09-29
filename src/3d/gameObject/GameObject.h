@@ -17,8 +17,6 @@ using namespace glm;
 class GameObject
 {
 public:
-
-    static unsigned int nextObjectId;
     unsigned int id;
 
     GameObject();
