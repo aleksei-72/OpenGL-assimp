@@ -21,8 +21,8 @@ class Model
 public:
 
     Model();
-    Model(std::string fname);
-    int loadFromFile(std::string fname);
+    Model(std::string fname, float scale = 1.f);
+    int loadFromFile(std::string fname, float scale = 1.f);
 
     std::vector <Mesh> meshes;
 
@@ -31,8 +31,8 @@ private:
 
     std::string originalFname;
     std::string folderPath;
-    void processNode(aiNode *node, const aiScene *scene);
-    Mesh processMesh(aiMesh *mesh, const aiScene *scene);
+    void processNode(aiNode *node, const aiScene *scene, float scale);
+    Mesh processMesh(aiMesh *mesh, const aiScene *scene, float scale);
 
     std::vector<std::string> loadMaterialTextures(aiMaterial *mat, aiTextureType type);
 };

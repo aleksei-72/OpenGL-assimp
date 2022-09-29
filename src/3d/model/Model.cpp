@@ -15,13 +15,13 @@ Model::Model()
 
 }
 
-Model::Model(string fname)
+Model::Model(string fname, float scale)
 {
 
-    loadFromFile(fname);
+    loadFromFile(fname, scale);
 }
 
-int Model::loadFromFile(string fname)
+int Model::loadFromFile(string fname, float scale)
 {
     // https://learnopengl.com/Model
     originalFname = fname;
@@ -41,27 +41,27 @@ int Model::loadFromFile(string fname)
     }
 
     logger_info("Read model '" + fname + "' success", "");
-    processNode(scene->mRootNode, scene);
+    processNode(scene->mRootNode, scene, scale);
 
     return 0;
 }
 
-void Model::processNode(aiNode *node, const aiScene *scene)
+void Model::processNode(aiNode *node, const aiScene *scene, float scale)
 {
 
     for(unsigned int i = 0; i < node->mNumMeshes; i++)
     {
         aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-        this->meshes.push_back(processMesh(mesh, scene));
+        this->meshes.push_back(processMesh(mesh, scene, scale));
     }
 
     for(unsigned int i = 0; i < node->mNumChildren; i++)
     {
-        processNode(node->mChildren[i], scene);
+        processNode(node->mChildren[i], scene, scale);
     }
 }
 
-Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
+Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene, float scale)
 {
     vector<Vertex> vertices;
 
@@ -70,12 +70,11 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
         Vertex vertex;
 
         glm::vec3 position;
-        position.x = mesh->mVertices[i].x;
-        position.y = mesh->mVertices[i].y;
-        position.z = mesh->mVertices[i].z;
+        position.x = mesh->mVertices[i].x * scale;
+        position.y = mesh->mVertices[i].y * scale;
+        position.z = mesh->mVertices[i].z * scale;
 
         vertex.position = position;
-
 
 
         glm::vec2 texCoords = {0, 0};

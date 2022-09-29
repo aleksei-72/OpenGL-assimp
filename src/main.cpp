@@ -133,7 +133,7 @@ int main(int argc, char* argv[])
 
         // Load 3d models and textures
         {
-            Model model("backpack/backpack.obj");
+            Model model("backpack/backpack.obj", 1);
             manager.addModel("backpack/backpack.obj", model);
 
             Object object;
