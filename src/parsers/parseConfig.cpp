@@ -43,6 +43,7 @@ void parseInitConfig(string fname)
     safeSaveParameter(pathSettings.meshPath = conf["path"]["mesh"].get<string>());
     safeSaveParameter(pathSettings.shaderPath = conf["path"]["shader"].get<string>());
     safeSaveParameter(pathSettings.texturePath = conf["path"]["texture"].get<string>());
+    safeSaveParameter(pathSettings.xmlPath = conf["path"]["xml"].get<string>());
 }
 
 void parseGraphicsConfig(string fname)

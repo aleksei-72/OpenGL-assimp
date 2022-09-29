@@ -22,6 +22,7 @@
 
 #include <src/fpsCounter/fpsCounter.h>
 #include <src/parsers/parseConfig.h>
+#include <src/parsers/parseLevel.h>
 #include <vector>
 
 using namespace std;
@@ -126,29 +127,7 @@ int main(int argc, char* argv[])
     Shader shader;
     shader.LoadFromFile("vertex.glsl", nullptr, "fragment.glsl");
 
-
-
-    // @TODO parse this parameters from xml file
-    {
-
-        // Load 3d models and textures
-        {
-            Model model("backpack/backpack.obj", 1);
-            manager.addModel("backpack/backpack.obj", model);
-
-            Object object;
-            object.model = manager.getModel("backpack/backpack.obj");
-            object.hitbox = nullptr;
-            object.physicsMode = none;
-
-            manager.addObject("backpack", object);
-        }
-
-        manager.spawn("backpack", {-0.5, -0.5, -0.5}, {0, 45, 0});
-        manager.spawn("backpack", {2.5, -0.5, 2.5}, {0, 45, 0});
-
-
-    }
+    parseLevel("levels/level1.xml");
 
     FpsCounter fpsCounter;
     fpsCounter.init(clock());

@@ -34,6 +34,7 @@ SOURCES += \
     src/logger/logger.cpp \
     src/main.cpp \
     src/parsers/parseConfig.cpp \
+    src/parsers/parseLevel.cpp \
     src/physics/player/playerPhysics.cpp \
     src/player/Player.cpp \
     src/public/public.cpp \
@@ -58,6 +59,7 @@ HEADERS += \
     src/input/mouse.h \
     src/logger/logger.h \
     src/parsers/parseConfig.h \
+    src/parsers/parseLevel.h \
     src/physics/player/playerPhysics.h \
     src/player/Player.h \
     src/public/public.h \
