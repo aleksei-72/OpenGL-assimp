@@ -134,7 +134,6 @@ int main(int argc, char* argv[])
         // Load 3d models and textures
         {
             Model model("backpack/backpack.obj");
-            model.texture = manager.getTexture("backpack/diffuse.jpg");
             manager.addModel("backpack/backpack.obj", model);
 
             Object object;
@@ -200,16 +199,6 @@ int main(int argc, char* argv[])
                 continue;
             }
 
-            if ((*(object)).object->model->texture == nullptr)
-            {
-                logger_error("model->texturt is null", (*(object)).object->model->getDebugInfo());
-                continue;
-            }
-
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, 0);
-            glBindTexture(GL_TEXTURE_2D, (*(object)).object->model->texture->texture);
-
             glm::mat4 model = (*(object)).getModelMatrix();
 
             glm::mat4 MVP = projection * view * model;
@@ -220,6 +209,11 @@ int main(int argc, char* argv[])
 
             for (Mesh mesh: (*(object)).object->model->meshes)
             {
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, 0);
+                // @TODO one mesh can has many diffuse textures
+                glBindTexture(GL_TEXTURE_2D, mesh.diffuseTextures.front()->t);
+
                 glBindVertexArray(mesh.vao);
                 glDrawArrays(GL_TRIANGLES, 0, mesh.triangleCount);
             }

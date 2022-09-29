@@ -55,10 +55,6 @@ Model* GameObjectManager::addModel(std::string name, Model m)
         throw new runtime_error("Attemp to save empty model as name '" + name + "'");
     }
 
-    if (m.texture == nullptr)
-    {
-        throw new runtime_error("Attemp to save model without texture as name '" + name + "'");
-    }
     modelStorage[name] = m;
 
     return &(modelStorage[name]);

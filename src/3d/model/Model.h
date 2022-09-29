@@ -11,6 +11,8 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <iostream>
+#include <vector>
 
 using namespace glm;
 
@@ -23,14 +25,16 @@ public:
     int loadFromFile(std::string fname);
 
     std::vector <Mesh> meshes;
-    Texture *texture;
 
     std::string getDebugInfo();
 private:
 
     std::string originalFname;
+    std::string folderPath;
     void processNode(aiNode *node, const aiScene *scene);
     Mesh processMesh(aiMesh *mesh, const aiScene *scene);
+
+    std::vector<std::string> loadMaterialTextures(aiMaterial *mat, aiTextureType type);
 };
 
 #endif // MODEL_H

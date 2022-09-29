@@ -25,6 +25,7 @@ public:
 
     Model* addModel(std::string name, Model m);
     Object* addObject(std::string name, Object o);
+
     GameObject* spawn(std::string objectName, glm::vec3 position, glm::vec3 turning = {0, 0, 0});
 private:
     std::map<std::string, Texture> textureStorage;

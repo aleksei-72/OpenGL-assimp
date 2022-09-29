@@ -71,7 +71,7 @@
                          <object>{1f9bcfb4-8d75-4570-b52f-5ecef89dca1e}</object>
                          <name>Model</name>
                          <pos>x:225;y:495</pos>
-                         <rect>x:-60;y:-40;w:120;h:80</rect>
+                         <rect>x:-50;y:-35;w:100;h:70</rect>
                          <visual-role>0</visual-role>
                          <stereotype-display>0</stereotype-display>
                         </DObject>
@@ -92,7 +92,7 @@
                          </base-DElement>
                          <object>{285a6c69-8762-44bd-85fe-d2027154b241}</object>
                          <name>Texture</name>
-                         <pos>x:105;y:650</pos>
+                         <pos>x:230;y:840</pos>
                          <rect>x:-50;y:-35;w:100;h:70</rect>
                          <visual-role>0</visual-role>
                         </DObject>
@@ -113,8 +113,8 @@
                          </base-DElement>
                          <object>{fd990524-ad76-4448-b204-044f659b7b7d}</object>
                          <name>Mesh</name>
-                         <pos>x:320;y:675</pos>
-                         <rect>x:-55;y:-50;w:110;h:100</rect>
+                         <pos>x:230;y:670</pos>
+                         <rect>x:-80;y:-55;w:160;h:110</rect>
                          <visual-role>0</visual-role>
                         </DObject>
                        </base-DObject>
@@ -191,7 +191,7 @@
                           </DElement>
                          </base-DElement>
                          <object>{17fb0772-6b89-4a79-b886-3df076c5f7d4}</object>
-                         <a>{96f642f6-b295-4884-b5da-c59f0f6e139e}</a>
+                         <a>{4cf08838-e099-4db9-8d63-b7d0c20d2788}</a>
                          <b>{7092f271-6610-42f2-9f05-75c5a78eae6c}</b>
                         </DRelation>
                        </base-DRelation>
@@ -386,7 +386,7 @@
                          <uid>{b9472077-2a2a-4518-bb51-88973197d510}</uid>
                         </DElement>
                        </base-DElement>
-                       <text>Скомпилированная шейдерная программа. Включает в себя сразу 3 скомпилированных шейдераю Хранит все данные в памяти видеокарты</text>
+                       <text>Скомпилированная шейдерная программа. Включает в себя сразу 3 скомпилированных шейдера. Хранит все данные в памяти видеокарты</text>
                        <pos>x:645;y:110</pos>
                        <rect>x:0;y:0;w:163;h:71</rect>
                        <auto-sized>false</auto-sized>
@@ -464,7 +464,7 @@
                     </item>
                    </qlist>
                   </elements>
-                  <last-modified>1664403326573</last-modified>
+                  <last-modified>1664475403191</last-modified>
                   <toolbarid>General</toolbarid>
                  </MDiagram>
                 </base-MDiagram>
@@ -618,39 +618,6 @@
                         </target>
                        </handle>
                       </item>
-                      <item>
-                       <handle>
-                        <uid>{17fb0772-6b89-4a79-b886-3df076c5f7d4}</uid>
-                        <target>
-                         <instance type="MAssociation">
-                          <MAssociation>
-                           <base-MRelation>
-                            <MRelation>
-                             <base-MElement>
-                              <MElement>
-                               <uid>{17fb0772-6b89-4a79-b886-3df076c5f7d4}</uid>
-                              </MElement>
-                             </base-MElement>
-                             <a>{1f9bcfb4-8d75-4570-b52f-5ecef89dca1e}</a>
-                             <b>{285a6c69-8762-44bd-85fe-d2027154b241}</b>
-                            </MRelation>
-                           </base-MRelation>
-                           <a>
-                            <MAssociationEnd>
-                             <cardinality>1</cardinality>
-                             <navigable>true</navigable>
-                            </MAssociationEnd>
-                           </a>
-                           <b>
-                            <MAssociationEnd>
-                             <cardinality>*</cardinality>
-                            </MAssociationEnd>
-                           </b>
-                          </MAssociation>
-                         </instance>
-                        </target>
-                       </handle>
-                      </item>
                      </qlist>
                     </handles>
                    </handles>
@@ -661,14 +628,7 @@
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{c345f3b5-42d7-4e6b-8724-b1181e37b277}</uid>
-                    <type>1</type>
-                    <declaration>+texture: *Texture</declaration>
-                   </MClassMember>
-                  </item>
-                  <item>
-                   <MClassMember>
-                    <uid>{9d357f3e-d3bb-43bb-a089-b8f061de21e3}</uid>
+                    <uid>{96cadd38-0224-404d-ae10-b87dcf9516bc}</uid>
                     <type>1</type>
                     <declaration>+meshes: Mesh[]</declaration>
                    </MClassMember>
@@ -700,7 +660,7 @@
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{d4804bfa-2ca9-44ee-9080-6ea4b1dc88b2}</uid>
+                    <uid>{bea68e1b-e7b9-4e19-8f13-2fcb7fab6ac5}</uid>
                     <type>1</type>
                     <declaration>+texture: GLuint</declaration>
                    </MClassMember>
@@ -726,27 +686,75 @@
                    </MElement>
                   </base-MElement>
                   <name>Mesh</name>
+                  <relations>
+                   <handles>
+                    <handles>
+                     <qlist>
+                      <item>
+                       <handle>
+                        <uid>{17fb0772-6b89-4a79-b886-3df076c5f7d4}</uid>
+                        <target>
+                         <instance type="MAssociation">
+                          <MAssociation>
+                           <base-MRelation>
+                            <MRelation>
+                             <base-MElement>
+                              <MElement>
+                               <uid>{17fb0772-6b89-4a79-b886-3df076c5f7d4}</uid>
+                              </MElement>
+                             </base-MElement>
+                             <a>{fd990524-ad76-4448-b204-044f659b7b7d}</a>
+                             <b>{285a6c69-8762-44bd-85fe-d2027154b241}</b>
+                            </MRelation>
+                           </base-MRelation>
+                           <a>
+                            <MAssociationEnd>
+                             <cardinality>1</cardinality>
+                             <navigable>true</navigable>
+                            </MAssociationEnd>
+                           </a>
+                           <b>
+                            <MAssociationEnd>
+                             <cardinality>*</cardinality>
+                            </MAssociationEnd>
+                           </b>
+                          </MAssociation>
+                         </instance>
+                        </target>
+                       </handle>
+                      </item>
+                     </qlist>
+                    </handles>
+                   </handles>
+                  </relations>
                  </MObject>
                 </base-MObject>
                 <members>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{2b2848ef-c991-44c5-a421-f49a55ac3e3b}</uid>
+                    <uid>{8950404e-038e-4cf5-be14-5cff74dcc0ca}</uid>
+                    <type>1</type>
+                    <declaration>+diffuseTextures: *Texture[]</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{2d15718b-9820-4431-9c43-d002af42afc8}</uid>
                     <type>1</type>
                     <declaration>+vao: GLuint</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{c5db8eb0-0880-49dc-9850-5fe9c6165bbb}</uid>
+                    <uid>{3819a1ef-4700-45c2-939f-9a4cfa480f4c}</uid>
                     <type>1</type>
                     <declaration>+vbo: GLuint</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{8abed3d6-c344-488a-8360-fe0aa0b9b8ba}</uid>
+                    <uid>{65bf5589-0650-4698-8764-51689954002d}</uid>
                     <type>1</type>
                     <declaration>+triangleCount: int</declaration>
                    </MClassMember>

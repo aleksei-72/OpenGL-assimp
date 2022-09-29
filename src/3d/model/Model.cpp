@@ -7,7 +7,6 @@
 
 #include <src/public/public.h>
 #include <src/constants.h>
-#include <iostream>
 
 using namespace std;
 
@@ -24,7 +23,15 @@ Model::Model(string fname)
 
 int Model::loadFromFile(string fname)
 {
+    // https://learnopengl.com/Model
     originalFname = fname;
+
+    size_t pos = fname.find_last_of('/');
+    if (pos != fname.npos)
+    {
+        folderPath = fname.substr(0, pos);
+    }
+
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(pathSettings.basePath + pathSettings.meshPath + fname, aiProcess_Triangulate | aiProcess_FlipUVs);
 
@@ -92,7 +99,35 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
         vertices.push_back(vertex);
     }
 
-    return Mesh(vertices);
+    Mesh m(vertices);
+
+    if (mesh->mMaterialIndex != 0)
+    {
+        aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+        vector<string> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE);
+
+        for(string fname: diffuseMaps)
+        {
+            Texture *t = manager.getTexture((folderPath.length() ? folderPath + "/" : "") + fname);
+
+            m.diffuseTextures.push_back(t);
+        }
+
+    }
+    return m;
+}
+
+vector<string> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type)
+{
+    vector<string> textureNames;
+    for(unsigned int i = 0; i < mat->GetTextureCount(type); i++)
+    {
+        aiString fname;
+        mat->GetTexture(type, i, &fname);
+
+        textureNames.push_back(string(fname.C_Str()));
+    }
+    return textureNames;
 }
 
 
