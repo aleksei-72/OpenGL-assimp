@@ -1,4 +1,5 @@
 #include <src/gameObjectManager/gameObjectManager.h>
+#include <src/public/public.h>
 
 using namespace std;
 using namespace glm;
@@ -53,6 +54,12 @@ Model* GameObjectManager::addModel(std::string name, Model m)
     if (m.meshes.size() == 0)
     {
         throw new runtime_error("Attemp to save empty model as name '" + name + "'");
+    }
+
+    for(Mesh mesh: m.meshes)
+    {
+        if (mesh.diffuseTextures.size() == 0)
+            logger_error_and_abort("attemp to save model without textures as name '" + name + "'", "");
     }
 
     modelStorage[name] = m;

@@ -100,19 +100,16 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene, float scale)
 
     Mesh m(vertices);
 
-    if (mesh->mMaterialIndex != 0)
+    aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+    vector<string> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE);
+
+    for(string fname: diffuseMaps)
     {
-        aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
-        vector<string> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE);
+        Texture *t = manager.getTexture((folderPath.length() ? folderPath + "/" : "") + fname);
 
-        for(string fname: diffuseMaps)
-        {
-            Texture *t = manager.getTexture((folderPath.length() ? folderPath + "/" : "") + fname);
-
-            m.diffuseTextures.push_back(t);
-        }
-
+        m.diffuseTextures.push_back(t);
     }
+
     return m;
 }
 
