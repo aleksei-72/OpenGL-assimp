@@ -8,12 +8,10 @@
 #include <src/player/Player.h>
 #include <iostream>
 
-#define logger_error(m, d) logger.error(m, d, __FILE__, __LINE__)
-
-#define logger_error_and_abort(m, d) {logger.error(m, d, __FILE__, __LINE__); std::abort();}
-
-
 #define logger_info(m, d) logger.info(m, d, __FILE__, __LINE__)
+
+#define logger_error(m, d) logger.error(m, d, __FILE__, __LINE__)
+#define logger_error_and_abort(m, d) {logger.error(m, d, __FILE__, __LINE__); std::abort();}
 
 using namespace glm;
 
