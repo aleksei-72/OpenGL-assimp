@@ -12,7 +12,7 @@ GLuint sfmlLoadTexture(string filename, int *width, int *height)
     sf::Image image;
     if (!image.loadFromFile(filename))
     {
-        logger.error("fail for load texture: " + filename);
+        logger_error("fail for load texture: " + filename, "");
         throw TEXTURE_LOAD_ERROR;
     }
 
@@ -24,7 +24,7 @@ GLuint sfmlLoadTexture(string filename, int *width, int *height)
 
     const unsigned char *tex = image.getPixelsPtr();
 
-    logger.info("Read texture '" + filename + '\'', "size: " + to_string(*width) + "x" + to_string(*height));
+    logger_info("Read texture '" + filename + " size: " + to_string(*width) + "x" + to_string(*height), "");
 
     GLuint texture;
 
@@ -54,8 +54,8 @@ Texture loadTexture(string filename)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 4);
@@ -63,5 +63,5 @@ Texture loadTexture(string filename)
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    return {texture, width, height};
+    return {filename, texture, width, height};
 }

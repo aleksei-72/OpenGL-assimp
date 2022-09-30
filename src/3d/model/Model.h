@@ -1,7 +1,7 @@
-#ifndef GAME_OBJECT_H
-#define GAME_OBJECT_H
+#ifndef MODEL_H
+#define MODEL_H
 
-#include <src/3d/mesh/mesh.h>
+#include <src/3d/mesh/Mesh.h>
 #include <src/gl/texture.h>
 
 #include <glm/vec2.hpp>
@@ -11,6 +11,8 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <iostream>
+#include <vector>
 
 using namespace glm;
 
@@ -18,26 +20,21 @@ class Model
 {
 public:
 
-    Model(std::string filename);
+    Model();
+    Model(std::string fname, float scale = 1.f);
+    int loadFromFile(std::string fname, float scale = 1.f);
 
     std::vector <Mesh> meshes;
-    Texture texture;
 
-    vec3 position = {0, 0, 0},
-        turning = {0, 0, 0};
-
-    void rotate(vec3 delta);
-
-    glm::mat4 getModelMatrix();
-
+    std::string getDebugInfo();
 private:
 
-    void processNode(aiNode *node, const aiScene *scene);
-    void normalizeDurning();
+    std::string originalFname;
+    std::string folderPath;
+    void processNode(aiNode *node, const aiScene *scene, float scale);
+    Mesh processMesh(aiMesh *mesh, const aiScene *scene, float scale);
 
-    Mesh processMesh(aiMesh *mesh, const aiScene *scene);
-
-    float normalizeOneAngle(float angle);
+    std::vector<std::string> loadMaterialTextures(aiMaterial *mat, aiTextureType type);
 };
 
-#endif // GAME_OBJECT_H
+#endif // MODEL_H

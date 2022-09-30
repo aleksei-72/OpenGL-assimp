@@ -1,6 +1,7 @@
 #ifndef FPS_COUNTER_H
 #define FPS_COUNTER_H
 
+#include <ctime>
 struct FpsCounter
 {
     clock_t frameStart;

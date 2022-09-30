@@ -1,10 +1,10 @@
 #include <GL/glew.h>
 #include <src/gl/pixelBufferToTGA.h>
 
-PixelBuffer getPixelBuffer(int bufferWidth, int bufferHeight)
+PixelBuffer getPixelBuffer(unsigned int bufferWidth, unsigned int bufferHeight)
 {
     // ширина*высота*3 цветовых бита
-    int bufferLenght = bufferWidth * bufferHeight * 3;
+    unsigned int bufferLenght = bufferWidth * bufferHeight * 3;
 
     unsigned char *output = new unsigned char[bufferLenght];
 

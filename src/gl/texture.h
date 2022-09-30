@@ -9,7 +9,8 @@
 
 struct Texture
 {
-    GLuint texture;
+    std::string fname;
+    GLuint t;
     int w, h;
 };
 

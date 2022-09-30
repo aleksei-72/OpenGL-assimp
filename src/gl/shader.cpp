@@ -19,6 +19,10 @@ int Shader::LoadFromFile(std::string vertexPath, std::string geometryPath, std::
 int Shader::LoadFromFile(const GLchar* vertexPath, const GLchar* geometryPath, const GLchar* fragmentPath)
 {
 
+
+    logger_info("Load shader files: '" + string(vertexPath) + "', " +
+        (geometryPath ? "'" + string(geometryPath) + "'" : "NULL") + ", '" + string(fragmentPath) + "'", "");
+
     if(geometryPath == 0 || string(geometryPath) == "0")
     {
         isGeometry = false;
@@ -64,7 +68,7 @@ int Shader::LoadFromFile(const GLchar* vertexPath, const GLchar* geometryPath, c
     }
     catch (std::ifstream::failure e)
     {
-        logger.error("can't open file" , "files: " + svertexPath+ "', '"+ sgeometryPath+ "', '"+ sfragmentPath+ "'");
+        logger_error("can't open file" , "files: " + svertexPath+ "', '"+ sgeometryPath+ "', '"+ sfragmentPath+ "'");
         return 1;
     }
 
@@ -84,7 +88,7 @@ int Shader::LoadFromFile(const GLchar* vertexPath, const GLchar* geometryPath, c
     if (!success)
     {
         glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        logger.error("fail for compile Shader :" + svertexPath, string(infoLog));
+        logger_error("fail for compile Shader :" + svertexPath, string(infoLog));
         return 1;
     }
 
@@ -100,7 +104,7 @@ int Shader::LoadFromFile(const GLchar* vertexPath, const GLchar* geometryPath, c
         if (!success)
         {
             glGetShaderInfoLog(geometryShader, 512, NULL, infoLog);
-            logger.error("fail for compile Shader :" + sgeometryPath, string(infoLog));
+            logger_error("fail for compile Shader :" + sgeometryPath, string(infoLog));
             return 1;
         }
     }
@@ -113,7 +117,7 @@ int Shader::LoadFromFile(const GLchar* vertexPath, const GLchar* geometryPath, c
     if (!success)
     {
         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        logger.error("fail for compile Shader :" + sfragmentPath, string(infoLog));
+        logger_error("fail for compile Shader :" + sfragmentPath, string(infoLog));
         return 1;
     }
 
@@ -130,7 +134,7 @@ int Shader::LoadFromFile(const GLchar* vertexPath, const GLchar* geometryPath, c
     if (!success)
     {
         glGetProgramInfoLog(programm, 512, NULL, infoLog);
-        logger.error("fail for compile Shader programm",
+        logger_error("fail for compile Shader programm",
                       "files :" + svertexPath + ", " + sgeometryPath + ", " + sfragmentPath + "\n\n" + string(infoLog));
         return 1;
     }

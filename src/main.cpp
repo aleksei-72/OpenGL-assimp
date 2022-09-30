@@ -6,6 +6,7 @@
 #include <src/public/public.h>
 #include <src/gl/shader.h>
 #include <src/3d/mesh/simpleMeshes.h>
+#include <src/3d/gameObject/GameObject.h>
 #include <src/gl/pixelBufferToTGA.h>
 #include <src/timer/timer.h>
 
@@ -21,18 +22,17 @@
 
 #include <src/fpsCounter/fpsCounter.h>
 #include <src/parsers/parseConfig.h>
+#include <src/parsers/parseLevel.h>
 #include <vector>
 
 using namespace std;
 
 int main(int argc, char* argv[])
 {
-
     Timer t;
-
     if (glfwInit() == GL_FALSE)
     {
-        logger.error("fail for init GLFW");
+        logger_error("fail for init GLFW", "");
         return 1;
     }
 
@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
     catch (runtime_error &e)
     {
         cout << e.what();
-        logger.error(e.what());
+        logger_error(e.what(), "");
         return 0;
     }
 
@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
 
         if (!window)
         {
-            logger.error("fail for create window", "fullscreen: " + string(graphicSettings.isFullScreen ? "t" : "f") +
+            logger_error("fail for create window", "fullscreen: " + string(graphicSettings.isFullScreen ? "t" : "f") +
                          " w: " + to_string(w) +
                          " h: " + to_string(h));
         }
@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
     glewExperimental = GL_TRUE;
     if (glewInit())
     {
-        logger.error("fail for init GLEW");
+        logger_error("fail for init GLEW", "");
         return 1;
     }
 
@@ -107,9 +107,11 @@ int main(int argc, char* argv[])
 
     if (!GLEW_VERSION_3_3)
     {
-        logger.error("OpenGL 3.3 is required");
+        logger_error("OpenGL 3.3 is required", "");
         return 1;
     }
+
+    logger_info("init OpenGL " + to_string(t.getElapsedTime()) + " ms", "");
 
     glEnable(GL_DEPTH_TEST);
 
@@ -125,16 +127,7 @@ int main(int argc, char* argv[])
     Shader shader;
     shader.LoadFromFile("vertex.glsl", nullptr, "fragment.glsl");
 
-    logger.info("init OpenGL", to_string(t.getElapsedTime()) + " ms");
-
-
-    vector<Model> objects;
-    {
-        Model obj("backpack/backpack.obj");
-        obj.texture = loadTexture("backpack/diffuse.jpg");
-        obj.position = {-0.5, -0.5, -0.5};
-        objects.push_back(obj);
-    }
+    parseLevel("levels/level1.xml");
 
     FpsCounter fpsCounter;
     fpsCounter.init(clock());
@@ -145,8 +138,6 @@ int main(int argc, char* argv[])
     {
 
         updatePlayer(window, frameTime);
-
-        //objects[0].rotate({0.002 * frameTime, 0.002 * frameTime, 0.002 * frameTime});
 
         glm::ivec2 resolution = {0, 0};
         glfwGetWindowSize(window, &resolution.x, &resolution.y);
@@ -173,21 +164,35 @@ int main(int argc, char* argv[])
 
         glUseProgram(shader.programm);
 
-        for (unsigned int i = 0; i < objects.size(); i++)
+        for (std::vector<GameObject>::iterator object = manager.begin(); object != manager.end(); object++)
         {
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, 0);
-            glBindTexture(GL_TEXTURE_2D, objects[i].texture.texture);
 
-            glm::mat4 model = objects[i].getModelMatrix();
+            if (object == manager.begin())
+            {
+                (*(object)).rotate({0.002 * frameTime, 0.002 * frameTime, 0.002 * frameTime});
+            }
+
+            if ((*(object)).object == nullptr)
+            {
+                logger_error("gameobject->object is null", (*(object)).getDebugInfo());
+                continue;
+            }
+
+            glm::mat4 model = (*(object)).getModelMatrix();
 
             glm::mat4 MVP = projection * view * model;
 
+            // @TODO: save uniform positions as variable
             glUniform1i(shader.getUniformPos("mainTexture"), 0);
             glUniformMatrix4fv(shader.getUniformPos("mvp"), 1, GL_FALSE, &MVP[0][0]);
 
-            for (Mesh mesh: objects[i].meshes)
+            for (Mesh mesh: (*(object)).object->model->meshes)
             {
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, 0);
+                // @TODO one mesh can has many diffuse textures
+                glBindTexture(GL_TEXTURE_2D, mesh.diffuseTextures.front()->t);
+
                 glBindVertexArray(mesh.vao);
                 glDrawArrays(GL_TRIANGLES, 0, mesh.triangleCount);
             }

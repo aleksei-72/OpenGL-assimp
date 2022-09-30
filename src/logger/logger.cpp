@@ -14,18 +14,20 @@ Logger::~Logger()
     stream.close();
 };
 
-void Logger::error(string msg, string description)
+void Logger::error(string msg, string description, string file, int line)
 {
-    string s = getLogMessage("error", msg, description, __FILE__, __LINE__);
+    string s = getLogMessage("error", msg, description, file, line);
     cerr << s;
     stream << s;
+    stream.flush();
 }
 
-void Logger::info(string msg, string description)
+void Logger::info(string msg, string description, string file, int line)
 {
-    string s = getLogMessage("info", msg, description, __FILE__, __LINE__);
+    string s = getLogMessage("info", msg, description, file, line);
     cout << s;
     stream << s;
+    stream.flush();
 }
 
 
@@ -38,7 +40,7 @@ string Logger::getLogMessage(string type, string msg, string description, string
         str += TAB + description + '\n';
     }
 
-    //str += TAB + "file: " + file + '\n' + "line: " + to_string(line) + '\n';
+    str += TAB + "file: " + file + '\n' + TAB + "line: " + to_string(line) + '\n';
 
     return str + '\n';
 }
