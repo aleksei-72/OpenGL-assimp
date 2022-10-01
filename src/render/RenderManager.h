@@ -10,7 +10,13 @@
 
 struct RenderManagerConfig
 {
-    Shader *shader;
+    Shader *mainShader;
+};
+
+struct shadersCache
+{
+    GLint mainShaderTexture1Pos,
+        mainShaderMVPpos;
 };
 
 class RenderManager
@@ -26,10 +32,14 @@ public:
     void beginRender();
     void endRender();
     void render(Model *m, glm::fvec3 position, glm::fvec3 turning);
+
 private:
 
     void generateProjectionMatrix();
     void generateViewMatrix();
+    void updateShaderCache();
+
+    shadersCache shaderCache;
     glm::fvec3 eye, center, up;
 
     float fov, distanse;

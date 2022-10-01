@@ -6,6 +6,7 @@ using namespace glm;
 RenderManager::RenderManager(RenderManagerConfig cfg)
 {
     this->cfg = cfg;
+    updateShaderCache();
 }
 
 void RenderManager::setResolution(ivec2 resolution)
@@ -49,6 +50,12 @@ void RenderManager::generateViewMatrix()
     );
 }
 
+void RenderManager::updateShaderCache()
+{
+    this->shaderCache.mainShaderTexture1Pos = this->cfg.mainShader->getUniformPos("texture1");
+    this->shaderCache.mainShaderMVPpos = this->cfg.mainShader->getUniformPos("mvp");
+}
+
 void RenderManager::beginRender()
 {
     generateProjectionMatrix();
@@ -57,7 +64,7 @@ void RenderManager::beginRender()
     glViewport(0, 0, resolution.x, resolution.y);
     glClear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(this->cfg.shader->programm);
+    glUseProgram(this->cfg.mainShader->programm);
 }
 
 void RenderManager::endRender()
@@ -75,11 +82,8 @@ void RenderManager::render(Model *m, glm::fvec3 position, glm::fvec3 turning)
 
     glm::mat4 MVP = this->projection * this->view * model;
 
-
-
-    // @TODO: save uniform positions as variable
-    glUniform1i(this->cfg.shader->getUniformPos("mainTexture"), 0);
-    glUniformMatrix4fv(this->cfg.shader->getUniformPos("mvp"), 1, GL_FALSE, &MVP[0][0]);
+    glUniform1i(this->shaderCache.mainShaderTexture1Pos, 0);
+    glUniformMatrix4fv(this->shaderCache.mainShaderMVPpos, 1, GL_FALSE, &MVP[0][0]);
 
     for (Mesh mesh: m->meshes)
     {
