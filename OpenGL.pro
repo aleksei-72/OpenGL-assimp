@@ -38,6 +38,7 @@ SOURCES += \
     src/physics/player/playerPhysics.cpp \
     src/player/Player.cpp \
     src/public/public.cpp \
+    src/render/RenderManager.cpp \
     src/timer/timer.cpp
 
 
@@ -63,6 +64,7 @@ HEADERS += \
     src/physics/player/playerPhysics.h \
     src/player/Player.h \
     src/public/public.h \
+    src/render/RenderManager.h \
     src/timer/timer.h
 
 

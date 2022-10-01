@@ -28,8 +28,6 @@ public:
 
     void rotate(vec3 delta);
 
-    glm::mat4 getModelMatrix();
-
     std::string getDebugInfo();
 private:
 

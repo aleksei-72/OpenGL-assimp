@@ -11,7 +11,6 @@
 #include <src/timer/timer.h>
 
 #include <glm/vec2.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 #include <src/physics/player/playerPhysics.h>
 
@@ -23,6 +22,8 @@
 #include <src/fpsCounter/fpsCounter.h>
 #include <src/parsers/parseConfig.h>
 #include <src/parsers/parseLevel.h>
+
+#include <src/render/RenderManager.h>
 #include <vector>
 
 using namespace std;
@@ -129,6 +130,12 @@ int main(int argc, char* argv[])
 
     parseLevel("levels/level1.xml");
 
+    RenderManager render(
+        {
+            &shader
+        }
+    );
+
     FpsCounter fpsCounter;
     fpsCounter.init(clock());
 
@@ -142,28 +149,19 @@ int main(int argc, char* argv[])
         glm::ivec2 resolution = {0, 0};
         glfwGetWindowSize(window, &resolution.x, &resolution.y);
 
-        glm::mat4 projection = glm::perspective(
-            glm::radians(graphicSettings.fov),
-            (float)resolution.x / (float)resolution.y,
-            0.1f,
-            (float)graphicSettings.renderDistance
-        );
-
-        glm::mat4 view = glm::lookAt(
+        render.setResolution(resolution);
+        render.setCamera(
             glm::vec3(player.position.x, player.position.y, player.position.z),
-
             glm::vec3(player.position.x + 1.0 * sin(player.turning.x),
-                  player.position.y -1.0 * tan(player.turning.y),
-                  player.position.z + 1.0 * cos(player.turning.x)),
+                player.position.y -1.0 * tan(player.turning.y),
+                player.position.z + 1.0 * cos(player.turning.x)),
             glm::vec3(0, 1, 0)
         );
+        render.setFOV(graphicSettings.fov);
+        render.setRenderDistance(graphicSettings.renderDistance);
 
-        // render
-        glViewport(0, 0, resolution.x, resolution.y);
-        glClear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shader.programm);
-
+        render.beginRender();
         for (std::vector<GameObject>::iterator object = manager.begin(); object != manager.end(); object++)
         {
 
@@ -178,25 +176,10 @@ int main(int argc, char* argv[])
                 continue;
             }
 
-            glm::mat4 model = (*(object)).getModelMatrix();
-
-            glm::mat4 MVP = projection * view * model;
-
-            // @TODO: save uniform positions as variable
-            glUniform1i(shader.getUniformPos("mainTexture"), 0);
-            glUniformMatrix4fv(shader.getUniformPos("mvp"), 1, GL_FALSE, &MVP[0][0]);
-
-            for (Mesh mesh: (*(object)).object->model->meshes)
-            {
-                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, 0);
-                // @TODO one mesh can has many diffuse textures
-                glBindTexture(GL_TEXTURE_2D, mesh.diffuseTextures.front()->t);
-
-                glBindVertexArray(mesh.vao);
-                glDrawArrays(GL_TRIANGLES, 0, mesh.triangleCount);
-            }
+            render.render((*(object)).object->model, (*(object)).position, (*(object)).turning);
         }
+        render.endRender();
+
 
         if(graphicSettings.doubleBufferization)
             glfwSwapBuffers(window);
