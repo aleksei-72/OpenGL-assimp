@@ -7,6 +7,7 @@
 #include <glm/vec3.hpp>
 #include <src/player/Player.h>
 #include <iostream>
+#include <src/constants.h>
 
 #define logger_info(m, d) logger.info(m, d, __FILE__, __LINE__)
 
@@ -34,7 +35,11 @@ struct GraphicSettings
           renderDistance = 250;
 
     ivec2 startWindowResolution,
+        renderResolution = ivec2(0,0),
         startWindowPosition;
+
+    int antialiasingValue = 0;
+    AntiAliasingType antiAliasingType = noneAA;
 };
 
 struct PlayerSettings

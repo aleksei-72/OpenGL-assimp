@@ -28,6 +28,44 @@
 
 using namespace std;
 
+void __stdcall openglCallback( GLenum source,
+                 GLenum type,
+                 GLuint id,
+                 GLenum severity,
+                 GLsizei length,
+                 const GLchar* message,
+                 const void* userParam )
+{
+    string strType = "";
+
+    switch (type)
+    {
+        case GL_DEBUG_TYPE_ERROR:
+            strType = "GL ERROR";
+        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+                strType = "GL DEPRECATED_BEHAVIOR";
+        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+                strType = "GL UNDEFINED_BEHAVIOR";
+        case GL_DEBUG_TYPE_PORTABILITY:
+                strType = "GL PORTABILITY";
+        case GL_DEBUG_TYPE_PERFORMANCE:
+                strType = "GL PERFORMANCE";
+        case GL_DEBUG_TYPE_OTHER:
+                strType = "GL OTHER";
+        case GL_DEBUG_TYPE_MARKER:
+                strType = "GL MARKER";
+        case GL_DEBUG_TYPE_PUSH_GROUP:
+                strType = "GL PUSH_GROUP";
+        case GL_DEBUG_TYPE_POP_GROUP:
+                strType = "GL POP_GROUP";
+    };
+
+    logger_error("OpenGL error",
+        "GL CALLBACK: " + strType +
+         ", severity = " + to_string(severity) +
+         ", message = " + string(message));
+}
+
 int main(int argc, char* argv[])
 {
     Timer t;
@@ -112,28 +150,38 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+    glEnable(GL_DEBUG_OUTPUT);
+    glDebugMessageCallback(openglCallback, 0);
+
     logger_info("init OpenGL " + to_string(t.getElapsedTime()) + " ms", "");
-
-    glEnable(GL_DEPTH_TEST);
-
-    glCullFace( GL_BACK );
-    glEnable(GL_CULL_FACE);
-
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glfwSetKeyCallback(window, onKeyEvent);
     glfwSetCursorPosCallback(window, onCursorPosition);
 
-    Shader shader;
-    shader.LoadFromFile("vertex.glsl", nullptr, "fragment.glsl");
-
     parseLevel("levels/level1.xml");
+
+
+    Shader shader;
+    shader.LoadFromFile("3d/vertex.glsl", nullptr, "3d/fragment.glsl");
+
+    Shader postProcessingShader;
+    postProcessingShader.LoadFromFile("post_processing/vertex.glsl", nullptr, "post_processing/fragment.glsl");
+
 
     RenderManager render(
         {
-            &shader
-        }
+            {
+                &shader,
+                &postProcessingShader
+            },
+            {
+              graphicSettings.antiAliasingType,
+              graphicSettings.antialiasingValue
+            }
+        },
+        &logger
     );
 
     FpsCounter fpsCounter;
@@ -149,7 +197,8 @@ int main(int argc, char* argv[])
         glm::ivec2 resolution = {0, 0};
         glfwGetWindowSize(window, &resolution.x, &resolution.y);
 
-        render.setResolution(resolution);
+        render.setWindowSize(resolution);
+        render.setResolution(graphicSettings.renderResolution);
         render.setCamera(
             glm::vec3(player.position.x, player.position.y, player.position.z),
             glm::vec3(player.position.x + 1.0 * sin(player.turning.x),
@@ -165,10 +214,10 @@ int main(int argc, char* argv[])
         for (std::vector<GameObject>::iterator object = manager.begin(); object != manager.end(); object++)
         {
 
-            if (object == manager.begin())
+            /*if (object == manager.begin())
             {
                 (*(object)).rotate({0.002 * frameTime, 0.002 * frameTime, 0.002 * frameTime});
-            }
+            }*/
 
             if ((*(object)).object == nullptr)
             {

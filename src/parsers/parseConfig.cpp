@@ -61,6 +61,23 @@ void parseGraphicsConfig(string fname)
 
     safeSaveParameter(graphicSettings.startWindowPosition.x = conf["graphics"]["windowX"].get<int64_t>());
     safeSaveParameter(graphicSettings.startWindowPosition.y = conf["graphics"]["windowY"].get<int64_t>());
+
+    safeSaveParameter(graphicSettings.renderResolution.x = conf["graphics"]["renderResolutionW"].get<int64_t>());
+    safeSaveParameter(graphicSettings.renderResolution.y = conf["graphics"]["renderResolutionH"].get<int64_t>());
+
+    safeSaveParameter(graphicSettings.antialiasingValue = conf["graphics"]["antialiasingValue"].get<int64_t>());
+
+    safeSaveParameter(
+        string aaType = conf["graphics"]["antialiasingType"].get<string>();
+
+        if (aaType == "FXAA")
+            graphicSettings.antiAliasingType = FXAA;
+    );
+
+    if (graphicSettings.renderResolution.x == 0 &&
+        graphicSettings.renderResolution.y == 0)
+        graphicSettings.renderResolution = graphicSettings.startWindowResolution;
+
 }
 
 void parsePlayerConfig(string fname)

@@ -3,6 +3,8 @@
 #include <tinyxml.h>
 #include <tinystr.h>
 #include <glm/vec3.hpp>
+#include <src/3d/mesh/Mesh.h>
+#include <src/3d/mesh/simpleMeshes.h>
 
 #include <iostream>
 
@@ -54,6 +56,37 @@ void parseLevel(string fname)
     {
         logger_error_and_abort("section 'objects' not found", "");
     }
+
+    {
+        Mesh mesh(generateCube(1.f));
+        mesh.diffuseTextures.push_back(manager.getTexture("default.png"));
+
+        Model m;
+        m.meshes.push_back(mesh);
+        manager.addModel("cube", m);
+
+        Object o;
+        o.model = manager.getModel("cube");
+        o.physicsMode = none;
+
+        manager.addObject("cube", o);
+    }
+
+    {
+        Mesh mesh(generatePlain(1.f));
+        mesh.diffuseTextures.push_back(manager.getTexture("default.png"));
+
+        Model m;
+        m.meshes.push_back(mesh);
+        manager.addModel("plain", m);
+
+        Object o;
+        o.model = manager.getModel("plain");
+        o.physicsMode = none;
+
+        manager.addObject("plain", o);
+    }
+
 
     parseObjectTypes(objectTypes);
     spamnObjectsFromXML(objects);
