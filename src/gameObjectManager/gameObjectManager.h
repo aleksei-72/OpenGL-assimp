@@ -11,6 +11,7 @@
 #include <src/3d/object/Object.h>
 #include <src/3d/hitbox/HitBox.h>
 #include <src/3d/gameObject/GameObject.h>
+#include <src/gameObjectStore/gameObjectStore.h>
 
 class GameObjectManager
 {
@@ -20,20 +21,19 @@ public:
     Model *getModel(std::string name);
     Object *get3dObject(std::string name);
 
-    std::vector<GameObject>::iterator begin();
-    std::vector<GameObject>::iterator end();
+    std::vector<GameObject>::iterator beginObjects();
+    std::vector<GameObject>::iterator endObject();
 
     Model* addModel(std::string name, Model m);
     Object* addObject(std::string name, Object o);
 
     GameObject* spawn(std::string objectName, glm::vec3 position, glm::vec3 turning = {0, 0, 0});
 private:
+    GameObjectStore store;
+
     std::map<std::string, Texture> textureStorage;
     std::map<std::string, Model> modelStorage;
     std::map<std::string, Object> objectStorage;
-    std::vector<GameObject> objects;
-
-    unsigned int nextObjectId = 0;
 };
 
 #endif// GAME_OBJECT_MANAGER_H

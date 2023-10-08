@@ -34,15 +34,6 @@ Object *GameObjectManager::get3dObject(string name)
     return &(objectStorage[name]);
 }
 
-std::vector<GameObject>::iterator GameObjectManager::begin()
-{
-    return objects.begin();
-}
-
-std::vector<GameObject>::iterator GameObjectManager::end()
-{
-    return objects.end();
-}
 
 Model* GameObjectManager::addModel(std::string name, Model m)
 {
@@ -93,11 +84,20 @@ GameObject* GameObjectManager::spawn(std::string objectName, vec3 position, vec3
 {
     GameObject obj = GameObject();
 
-    obj.id = nextObjectId;
-    nextObjectId++;
-
     obj.object = get3dObject(objectName);
     obj.position = position;
     obj.rotate(turning);
-    objects.push_back(obj);
+
+    return this->store.store(obj);
 }
+
+std::vector<GameObject>::iterator GameObjectManager::beginObjects()
+{
+    return this->store.beginObjects();
+}
+
+std::vector<GameObject>::iterator GameObjectManager::endObject()
+{
+    return this->store.endObjects();
+}
+

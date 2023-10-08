@@ -211,7 +211,7 @@ int main(int argc, char* argv[])
 
 
         render.beginRender();
-        for (std::vector<GameObject>::iterator object = manager.begin(); object != manager.end(); object++)
+        for (std::vector<GameObject>::iterator object = manager.beginObjects(); object != manager.endObject(); object++)
         {
 
             /*if (object == manager.begin())

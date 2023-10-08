@@ -25,6 +25,7 @@ SOURCES += \
     src/3d/model/Model.cpp \
     src/3d/object/Object.cpp \
     src/gameObjectManager/gameObjectManager.cpp \
+    src/gameObjectStore/gameObjectStore.cpp \
     src/gl/pixelBuffer.cpp \
     src/gl/pixelBufferToTGA.cpp \
     src/gl/shader.cpp \
@@ -52,6 +53,7 @@ HEADERS += \
     src/constants.h \
     src/fpsCounter/fpsCounter.h \
     src/gameObjectManager/gameObjectManager.h \
+    src/gameObjectStore/gameObjectStore.h \
     src/gl/pixelBuffer.h \
     src/gl/pixelBufferToTGA.h \
     src/gl/shader.h \
